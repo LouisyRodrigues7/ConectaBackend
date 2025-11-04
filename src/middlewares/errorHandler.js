@@ -1,4 +1,6 @@
+// src/middlewares/errorHandler.js
 export const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Erro interno do servidor", error: err.message });
+  console.error("Unhandled error:", err);
+  const status = err.status || 500;
+  res.status(status).json({ message: err.message || "Server error" });
 };
