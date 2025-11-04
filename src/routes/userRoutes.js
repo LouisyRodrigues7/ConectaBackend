@@ -4,7 +4,7 @@ import { signup, login, verifyMFA } from "../controllers/userController.js";
 
 const router = express.Router();
 
-// endpoints:
+// Endpoints da API de usuários
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/verify-mfa", verifyMFA);
