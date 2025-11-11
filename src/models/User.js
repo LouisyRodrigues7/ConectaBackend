@@ -1,4 +1,3 @@
-// src/models/User.js
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -6,8 +5,21 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String, required: true },
   userType: { type: String, required: true },
-  secret: { type: String }, // MFA secret
+
+  // MFA
+  secret: { type: String },
   isMFAEnabled: { type: Boolean, default: false },
+  backupCode: { type: String },
+  tempMFACode: { type: String },
+  tempMFACodeExp: { type: Date },
+
+  // Verificação de e-mail
+  isVerified: { type: Boolean, default: false },
+  emailToken: { type: String },
+
+  // Recuperação de senha
+  resetToken: { type: String },
+  resetTokenExp: { type: Date },
 }, {
   timestamps: true
 });
