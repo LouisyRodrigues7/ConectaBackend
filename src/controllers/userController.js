@@ -1,10 +1,11 @@
-
 import bcrypt from "bcryptjs";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import User from "../models/User.js";
 
-
+// REGEX DE VALIDAÇÃO
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
 
 export const signup = async (req, res) => {
   try {
@@ -12,10 +13,29 @@ export const signup = async (req, res) => {
 
     const { name, email, password, userType } = req.body;
 
+    // Campos obrigatórios
     if (!name || !email || !password || !userType) {
       return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios!" });
     }
 
+    // Validação de e-mail
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "E-mail inválido! Use o formato: exemplo@servico.com"
+      });
+    }
+
+    // Validação de senha
+    if (!senhaRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "A senha deve ter pelo menos 8 caracteres, incluindo 1 letra maiúscula, 1 minúscula, 1 número e 1 caractere especial."
+      });
+    }
+
+    // Verifica duplicidade
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: "E-mail já cadastrado!" });
@@ -23,6 +43,7 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Cria segredo MFA
     const secret = speakeasy.generateSecret({ name: `ConectaBus (${email})` });
 
     const user = await User.create({
@@ -34,7 +55,7 @@ export const signup = async (req, res) => {
       isMFAEnabled: true
     });
 
-    // Gera o QR Code em Base64
+    // Gera QR Code em Base64
     const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
 
     return res.status(201).json({
@@ -42,6 +63,7 @@ export const signup = async (req, res) => {
       message: "Usuário criado com sucesso!",
       qrCodeUrl
     });
+
   } catch (error) {
     console.error("❌ Erro no signup controller:", error);
     return res.status(500).json({
@@ -51,6 +73,7 @@ export const signup = async (req, res) => {
     });
   }
 };
+
 
 export const login = async (req, res) => {
   try {
@@ -71,13 +94,13 @@ export const login = async (req, res) => {
       return res.status(400).json({ success: false, message: "Senha incorreta!" });
     }
 
-    // Indica ao front que precisa do token MFA
     return res.status(200).json({
       success: true,
       requireToken: true,
       email,
       message: "Senha correta. Digite o código MFA."
     });
+
   } catch (error) {
     console.error("❌ Erro no login controller:", error);
     return res.status(500).json({
@@ -87,6 +110,7 @@ export const login = async (req, res) => {
     });
   }
 };
+
 
 export const verifyMFA = async (req, res) => {
   try {

@@ -58,7 +58,7 @@ app.get("/", (req, res) => res.status(200).json({ message: "🚀 API ConectaBus 
 // mount das rotas
 app.use("/api/users", userRoutes);
 
-// tratamento de erro centralizado (deve vir por último)
+// tratamento de erro centralizado
 app.use(errorHandler);
 
 export default app;
