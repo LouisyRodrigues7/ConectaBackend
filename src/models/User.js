@@ -30,8 +30,15 @@ const userSchema = new mongoose.Schema({
 
   userType: { type: String, required: true },
 
-  secret: { type: String }, 
-  isMFAEnabled: { type: Boolean, default: false },
+  secret: { type: String },
+  isMFAEnabled: { type: Boolean, default: true },
+
+  // 🔥 Novo campo — códigos de recuperação hashados
+  recoveryCodes: {
+    type: [String],
+    default: []
+  }
+
 }, {
   timestamps: true
 });

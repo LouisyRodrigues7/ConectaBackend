@@ -1,12 +1,20 @@
-// src/routes/userRoutes.js
 import express from "express";
-import { signup, login, verifyMFA } from "../controllers/userController.js";
+import {
+  signup,
+  login,
+  verifyMFA,
+  resetMFA,
+  resetPassword
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
-// Endpoints da API de usuários
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/verify-mfa", verifyMFA);
+
+// 🔥 Novas rotas
+router.post("/reset-mfa", resetMFA);
+router.post("/reset-password", resetPassword);
 
 export default router;
