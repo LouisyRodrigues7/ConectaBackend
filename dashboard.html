@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1400, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Parada Inteligente - Dashboard</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-mode">
+  <header>
+    <h1>ConectaBus</h1>
+    <div class="controls">
+      <select id="paradaSelect">
+        <option value="todas">Todas</option>
+        <option value="1">014 - Brasília / Conde da Boa Vista</option>
+        <option value="2">032 - Setúbal / Conde da Boa Vista</option>
+        <option value="3">101 - Circular Conde da Boa Vista / Joana Bezerra</option>
+        <option value="4">061 - Piedade / Conde da Boa Vista</option>        
+      </select>
+      
+      
+      <select id="periodoSelect">
+        <option value="24h">Últimas 24 horas</option>
+        <option value="7d">Últimos 7 dias</option>
+        <option value="1m">Último mês</option>
+        <option value="3m">Últimos 3 meses</option>
+        <option value="6m">Últimos 6 meses</option>
+        <option value="1a">Último ano</option>
+      </select>
+
+      <button id="atualizarBtn">Atualizar</button>
+      
+      <div class="theme-switch-wrapper">
+        <i id="sunIcon" class="fas fa-sun theme-icon"></i>
+        <label class="switch">
+          <input type="checkbox" id="temaToggle">
+          <span class="slider"></span>
+        </label>
+        <i id="moonIcon" class="fas fa-moon theme-icon"></i>
+      </div>
+      <button onclick="logout()" class="logout-btn">Deslogar</button>
+    </div>
+    <div class="card pdf-box">
+  <h3>Gerar Relatório em PDF</h3>
+  
+  <select id="periodoPDF">
+    <option value="24h">Últimas 24 horas</option>
+    <option value="7d">Últimos 7 dias</option>
+    <option value="1m">Último mês</option>
+    <option value="3m">Últimos 3 meses</option>
+    <option value="6m">Últimos 6 meses</option>
+    <option value="1a">Último ano</option>
+  </select>
+
+  <button id="btnGerarPDF" class="pdf-btn">Gerar PDF</button>
+</div>
+
+  </header>
+
+  <section class="cards">
+    <div class="card blue">
+      <h3>Deficiência visual</h3>
+      <p id="totalVisual">–</p>
+    </div>
+    <div class="card orange">
+      <h3>Deficiência Física</h3>
+      <p id="totalFisico">–</p>
+    </div>
+    <div class="card green">
+      <h3>Parada com mais fluxo</h3>
+      <p id="topParada">–</p>
+    </div>
+  </section>
+
+  <main class="charts">
+    <div class="chart-container">
+      <h2>Total de pessoas por deficiência</h2>
+      <canvas id="totalClicksChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h2>Deficiência por Horário</h2>
+      <canvas id="hourlyClicksChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h2>Comparação do Fluxo Total por Parada</h2>
+      <canvas id="comparacaoFluxoChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h2>Comparação por Tipo de Deficiência por Parada</h2>
+      <canvas id="comparacaoDeficienciaChart"></canvas>
+    </div>
+  </main>
+
+  <footer>
+    <p>Última atualização: <span id="ultimaAtualizacao">–</span></p>
+  </footer>
+
+  <script src="js/dashboard.js"></script>
+  <script>
+  function logout() {
+    // Limpa dados de sessão
+    sessionStorage.clear();
+    localStorage.clear();
+
+    // Redireciona para a página de login
+    window.location.href = "index.html";
+  }
+</script>
+</body>
+</html>

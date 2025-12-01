@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - ConectaBus</title>
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/auth.css">
+
+
+  <script type="module" src="js/login.js" defer></script>
+</head>
+
+<body>
+  <div class="container">
+      <div class="center-box">
+
+          <img src="assets/Logo ConectaBus (1).svg" alt="ConectaBus Logo" class="logo-img">
+
+          <p class="title">Entre para iniciar sua<br>sessão no <strong>ConectaBus</strong></p>
+
+
+          <input id="email" type="email" placeholder="E-mail:" class="input-field">
+          <input id="password" type="password" placeholder="Senha:" class="input-field">
+
+          <button id="loginBtn" class="btn">Entrar</button>
+
+          <p class="reset-links">
+            <a href="reset_password.html">Esqueci minha senha</a><br>
+            <a href="reset_mfa.html">Resetar QR Code</a>
+          </p>
+          
+
+          <p class="signup-text">
+            Não tem uma conta?
+            <a href="signup.html"><b> Cadastre-se aqui </b></a>
+          </p>
+      </div>
+  </div>
+
+
+  <div id="mfa-popup" class="mfa-popup">
+    <div class="mfa-popup-content">
+      <span style="font-size: 36px;">🔐</span>
+      <h3 class="mfa-title">Autenticação MFA</h3>
+      <p class="mfa-description">Digite o código do Microsoft Authenticator:</p>
+      <input id="token" placeholder="Código MFA" style="padding:10px; width:80%; border-radius:8px; text-align:center;" />
+      <div style="margin-top: 15px;">
+        <button id="verifyMfaBtn" style="padding:8px 14px; border-radius:8px; background:#3ECF8E; color:#01133d; border:none;">Verificar</button>
+        <button id="closeMfaBtn" style="padding:8px 14px; border-radius:8px; background:#fc4343; color:white; border:none;">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

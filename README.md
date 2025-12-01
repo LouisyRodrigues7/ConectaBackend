@@ -1,130 +1,145 @@
-# 🚍 ConectaBus Backend
+# 🚍 ConectaBus Frontend
 
-O **ConectaBus Backend** é o núcleo do sistema ConectaBus --- uma
-solução de **Internet das Coisas (IoT)** que integra placas ESP32
-físicas e simulações no Wokwi para monitoramento de acessibilidade em
-paradas de ônibus inteligentes.
+Bem-vindo ao **ConectaBus Frontend**, a interface web do sistema ConectaBus — um projeto de **Internet das Coisas (IoT)** voltado para melhorar a acessibilidade e experiência dos usuários em paradas de ônibus inteligentes.
 
-O backend recebe dados enviados para o **ThingSpeak** por dois botões
-instalados nas placas IoT: - 🔵 Botão azul --- Registro para
-**deficiência visual** - 🟡 Botão amarelo --- Registro para
-**deficiência física**
+O sistema integra sensores instalados em placas **Arduino**, que enviam dados continuamente para o serviço **ThingSpeak**, permitindo a coleta e análise de métricas em tempo real.  
+O dashboard exibe essas informações de forma visual e dinâmica, apresentando estatísticas, gráficos e comparações sobre o fluxo de pessoas com diferentes tipos de deficiência nas paradas monitoradas.
 
-Quando acionados, as placas: - Enviam dados ao ThingSpeak\
-- Disparam um sinal sonoro na parada indicando: - Ônibus chegando em 5
-minutos\
-- Instruções de embarque acessível
+Além disso, o projeto conta com um sistema moderno de autenticação com suporte a **MFA (Autenticação Multifator)**, garantindo maior segurança no acesso à plataforma.
 
-Todos os registros são armazenados no **MongoDB Atlas**, permitindo
-integração direta com o frontend do ConectaBus.
 
 ------------------------------------------------------------------------
 
-## 📁 Estrutura do Projeto
+## 🧩 Estrutura do Projeto
 
-    CONECTABACKEND/
-    ├── src/
-    │   ├── config/
-    │   │   └── db.js                # Conexão com MongoDB Atlas
-    │   ├── controllers/
-    │   │   └── userController.js    # Lógica principal de autenticação e cadastro
-    │   ├── middlewares/
-    │   │   └── errorHandler.js      # Middleware global de erros
-    │   ├── models/
-    │   │   └── User.js              # Schema de usuário
-    │   ├── routes/
-    │   │   └── userRoutes.js        # Rotas de autenticação e MFA
-    ├── app.js                       # Configuração principal do Express
-    ├── server.js                    # Inicialização do servidor
-    ├── package.json                 # Dependências e scripts NPM
-    └── README.md                    # Este arquivo
+    CONECTAFRONTEND/
+    │
+    ├── assets/
+    │   ├── Logo ConectaBus (1).svg   # Logo em SVG
+    │ 
+    │
+    ├── js/
+    │   ├── api.js                    # Configuração da URL base da API
+    │   ├── dashboard.js              # Lógica da tela de dashboard
+    │   ├── login.js                  # Lógica de autenticação e MFA
+    │   └── signup.js                 # Lógica de cadastro de usuários
+    │
+    ├── styles/
+    │   ├── auth.css                  # Estilos das telas de login
+    │   ├── cadastro.css              # Estilos da tela de cadastro
+    │   └── style.css                 # Estilos gerais do dashboard e layout principal
+    │
+    ├── dashboard.html                # Página principal após login
+    ├── index.html                    # Página de login
+    ├── signup.html                   # Página de cadastro
+    └── README.md                     # Documentação do projeto
 
 ------------------------------------------------------------------------
 
 ## ⚙️ Tecnologias Utilizadas
 
--   **Node.js** + **Express**
--   **MongoDB Atlas** + **Mongoose**
--   **dotenv**
--   **bcryptjs**
--   **jsonwebtoken**
--   **otplib / speakeasy** -- Códigos MFA
--   **CORS**
--   **ThingSpeak API**
+-   **HTML5** --- Estrutura semântica e responsiva\
+-   **CSS3** --- Layout moderno e responsivo (Flexbox / Grid / Dark
+    Mode)\
+-   **JavaScript (ES6 Modules)** --- Lógica de autenticação, dashboard e
+    chamadas API\
+-   **Fetch API** --- Comunicação com o backend hospedado no Render\
+-   **Chart.js** --- Geração de gráficos dinâmicos no dashboard\
+-   **Netlify** --- Hospedagem estática com deploy contínuo
 
 ------------------------------------------------------------------------
 
-## 🔐 Rotas Principais
+## 🌐 Integração com o Backend
 
-  Método   Endpoint                  Descrição
-  -------- ------------------------- -------------------------------------
-  `POST`   `/api/users/signup`       Cria um novo usuário
-  `POST`   `/api/users/login`        Validação inicial e solicitação MFA
-  `POST`   `/api/users/verify-mfa`   Valida o token MFA
-  `GET`    `/api/users`              Lista usuários
-
-------------------------------------------------------------------------
-
-## 🌐 Integração com o Frontend
-
-Backend hospedado no **Render**:
-
-    https://conectabackendv2.onrender.com
-
-Usado no frontend:
+A base da API está configurada em `js/api.js`:
 
 ``` js
 export const API_URL = "https://conectabackendv2.onrender.com";
 ```
 
-------------------------------------------------------------------------
+### Endpoints utilizados:
 
-## 🚀 Como Rodar Localmente
+  ------------------------------------------------------------------------
+  Método              Endpoint                  Descrição
+  ------------------- ------------------------- --------------------------
+  `POST`              `/api/users/login`        Realiza login e retorna se
+                                                o MFA é necessário
 
-### 1️⃣ Clone o repositório
+  `POST`              `/api/users/verify-mfa`   Valida o token do
+                                                Microsoft Authenticator
 
-``` bash
-git clone https://github.com/SEU_USUARIO/ConectaBackend.git
-cd ConectaBackend
-```
-
-### 2️⃣ Instale dependências
-
-``` bash
-npm install
-```
-
-### 3️⃣ Configure o `.env`
-
-``` env
-PORT=5000
-MONGO_URI=sua_string_mongodb
-JWT_SECRET=sua_chave_segura
-```
-
-### 4️⃣ Inicie o servidor
-
-``` bash
-npm start
-```
-
-Servidor:
-
-    http://localhost:5000
+  `POST`              `/api/users/register`     Cadastra um novo usuário e
+                                                retorna QR Code
+  ------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
-## 🔥 Deploy no Render
+## 🔐 Fluxo de Autenticação (Login + MFA)
 
-Configure como Web Service:
-
-    Build: npm install
-    Start: node server.js
-
-Adicione variáveis: `PORT`, `MONGO_URI`, `JWT_SECRET`.
+1.  O usuário informa **e-mail e senha** em `index.html`.\
+2.  O frontend envia os dados para `/api/users/login`.\
+3.  Se `requireToken = true`, o popup de **MFA** é exibido.\
+4.  O usuário digita o código gerado pelo **Microsoft Authenticator**.\
+5.  Após validação bem-sucedida (`verify-mfa`), o usuário é
+    redirecionado para `dashboard.html`.
 
 ------------------------------------------------------------------------
-## 👩‍💻 Equipe ConectaBus
+
+## 🧠 Páginas Principais
+
+### 🏠 `index.html` --- Login
+
+-   Campos de e-mail e senha\
+-   Suporte a autenticação MFA\
+-   Popup dinâmico para inserção do token
+
+### 📝 `signup.html` --- Cadastro
+
+-   Formulário de criação de conta\
+-   Tipos de usuário (Estudante, Governo, Cidadão)\
+-   Exibição automática do QR Code MFA após cadastro
+
+### 📊 `dashboard.html` --- Dashboard
+
+-   Visualização de métricas e estatísticas\
+-   Gráficos dinâmicos com Chart.js\
+-   Filtros por parada e período\
+-   Suporte a tema claro/escuro
+
+------------------------------------------------------------------------
+
+## 🚀 Deploy no Netlify
+
+O projeto está configurado para **deploy automático**.
+
+### 📦 Passos:
+
+1.  Enviar commits para o branch `main`.\
+2.  O Netlify identifica mudanças automaticamente.\
+3.  O deploy ocorre imediatamente.
+
+------------------------------------------------------------------------
+
+## 💡 Dica de Debug
+
+Se o login não redirecionar corretamente:
+
+-   Certifique-se de que **dashboard.html** está sendo chamado (não
+    `home.html`).\
+-   Verifique o valor de `API_URL`.\
+-   Teste os endpoints no **Postman** antes de integrar ao frontend.
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Autor
+
+**ConectaBus Frontend**\
+Desenvolvido pela equipe ConectaBus\
+📅 Atualizado em **Novembro de 2025**\
+🌐 Hospedagem: Netlify\
+🔗 Backend: Render
+
+## 🤝 Equipe
 
 <table>
   <tr>
